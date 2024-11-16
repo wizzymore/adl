@@ -22,9 +22,6 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Build step
-        run: "deno task build"
-
       - name: Build exe 
         run: "deno compile main.ts"
       
