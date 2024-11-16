@@ -9,7 +9,12 @@ adl helps generate markdown files for capturing information in an ADR and genera
 Install adl and add it to your path.
 
 ```bash
-curl -o adl https://github.com/bradcypert/adl/releases/latest/download/adl
+# curl, follow redirects, output to "adl", download target latest release
+curl -L -o adl https://github.com/bradcypert/adl/releases/latest/download/adl
+
+# Update permissions for adl
+chmod 744 adl
+
 # You probably also want to move this to a place that exists in your path
 mv adl /usr/local/bin
 ```
