@@ -35,7 +35,7 @@ async function makeNewADR(
 
 ## Decision Outcome
 
-<!-- Add additional information here, comparsion of options, research, etc -->
+<!-- Add additional information here, comparison of options, research, etc -->
   `);
   await file.write(contents);
   return {
