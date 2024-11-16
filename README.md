@@ -6,9 +6,13 @@ adl helps generate markdown files for capturing information in an ADR and genera
 
 ## How to use
 
-TODO: Fill this out more
-
 Install adl and add it to your path.
+
+```bash
+curl -o adl https://github.com/bradcypert/adl/releases/latest/download/adl
+# You probably also want to move this to a place that exists in your path
+mv adl /usr/local/bin
+```
 
 As of now, `adl` ships with two commands.
 
