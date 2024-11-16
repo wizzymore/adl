@@ -23,7 +23,7 @@ async function makeNewADR(
   name: string,
 ): Promise<Deno.DirEntry> {
   const paddedNum = n.toString().padStart(5, "0");
-  const fileName = `${paddedNum}-${name}.md`;
+  const fileName = `${paddedNum}-${name.replace(" ", "-")}.md`;
   const file = await Deno.create(path.join(adrdir, fileName));
   const encoder = new TextEncoder();
   const contents = encoder.encode(`# ${paddedNum} - ${name}
@@ -68,7 +68,8 @@ If you need to regenerate this readme without creating a new ADR, please use \`a
 
 ${
       files.filter((f) => f.isFile).map((f) => {
-        return `- [${f.name}](./${f.name})`;
+        const noExt = f.name.substring(0, f.name.lastIndexOf("."));
+        return `- [${noExt}](./${f.name})`;
       }).join("\n")
     }
 

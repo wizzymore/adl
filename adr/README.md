@@ -9,6 +9,7 @@ If you need to regenerate this readme without creating a new ADR, please use `ad
 
 ## Contents 
 
-- [00000-Use Deno.md](./00000-Use Deno.md)
+- [README](./README.md)
+- [00000-Use-Deno](./00000-Use-Deno.md)
 
-Last generated 2024-11-16T16:45:14.162Z
+Last generated 2024-11-16T17:08:26.792Z

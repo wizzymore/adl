@@ -16,7 +16,7 @@ As of now, `adl` ships with two commands.
 
 `adl create Deno as a platform`
 
-This will create a new README in your `adr` directory (creating that directory if necessary) and a README that begins with a series of 0-padded numbers and args after `create`. For example, if this was your first ADR, it would create the file `YOUR_PROJECT_ROOT/adr/00000-Deno as a platform.md`. It would then generate a README in the same directory and start cataloguing your ADRs for you.
+This will create a new README in your `adr` directory (creating that directory if necessary) and a README that begins with a series of 0-padded numbers and args after `create`. For example, if this was your first ADR, it would create the file `YOUR_PROJECT_ROOT/adr/00000-Deno-as-a-platform.md`. It would then generate a README in the same directory and start cataloguing your ADRs for you.
 
 ### Regenerating the README
 
