@@ -21,12 +21,31 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Build exe 
-        run: "deno compile main.ts"
+      - name: Build Windows 
+        run: "deno compile --target x86_64-pc-windows-msvc -o adl_windows_x86 main.ts"
+
+      - name: Build Mac_x86 
+        run: "deno compile --target x86_64-apple-darwin -o adl_mac_x86 main.ts"
+
+      - name: Build Mac_ARM 
+        run: "deno compile --target aarch64-apple-darwin -o adl_mac_arm main.ts"
+
+      - name: Build Linux_x86 
+        run: "deno compile --target x86_64-unknown-linux-gnu -o adl_linux_x86 main.ts"
+
+      - name: Build Linux_ARM
+        run: "deno compile --target aarch64-unknown-linux-gnu -o adl_linux_arm main.ts"
+
       
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: adl
+          files: |
+            adl_windows_x86
+            adl_mac_x86
+            adl_mac_arm
+            adl_linux_x86
+            adl_linux_arm
+            LICENSE
 
