@@ -12,4 +12,4 @@ If you need to regenerate this readme without creating a new ADR, please use `ad
 - [00001-Support-an-assets-folder](./00001-Support-an-assets-folder.md)
 - [00000-Use-Deno](./00000-Use-Deno.md)
 
-Last generated 2024-11-20T23:37:05.656Z
+Last generated 2024-11-20T23:42:49.451Z

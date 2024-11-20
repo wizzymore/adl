@@ -85,22 +85,38 @@ Last generated ${new Date().toISOString()}
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
-  let adrdir = Deno.cwd();
-  if (!adrdir.endsWith("adr")) {
-    // we need to add the adr folder
-    adrdir = path.join(adrdir, "adr");
-  }
-
-  const files = await getAllFilesInDir(adrdir);
-  await ensureAssetsDirExists(adrdir);
-  const adrsOnly = files.filter((f) => /^\d{5}-.*$/.test(f.name));
   const action = Deno.args[0];
+  if (action === "help" || (action !== "create" && action !== "regen")) {
+    console.log(`adl
+Manage your Architecture Reference Diagrams with ease.
 
-  if (action == "create") {
-    const name = Deno.args.slice(1).join(" ");
-    const newFile = await makeNewADR(adrdir, adrsOnly.length, name);
-    files.push(newFile);
+help menu
+
+supported arguments
+
+create - adl create my-new-adr-name
+  create a new ADR
+
+regen - adl regen
+  regenerate the ADR README
+`);
+  } else {
+    let adrdir = Deno.cwd();
+    if (!adrdir.endsWith("adr")) {
+      // we need to add the adr folder
+      adrdir = path.join(adrdir, "adr");
+    }
+
+    const files = await getAllFilesInDir(adrdir);
+    await ensureAssetsDirExists(adrdir);
+    const adrsOnly = files.filter((f) => /^\d{5}-.*$/.test(f.name));
+
+    if (action == "create") {
+      const name = Deno.args.slice(1).join(" ");
+      const newFile = await makeNewADR(adrdir, adrsOnly.length, name);
+      files.push(newFile);
+    }
+
+    await rebuildReadme(adrdir, files);
   }
-
-  await rebuildReadme(adrdir, files);
 }
