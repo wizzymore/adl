@@ -1,7 +1,6 @@
 import * as path from "jsr:@std/path";
 
-async function getAllFilesInDir(path: string) {
-  const files = [];
+async function ensureDirExists(path: string) {
   try {
     await Deno.lstat(path);
   } catch (error) {
@@ -9,12 +8,21 @@ async function getAllFilesInDir(path: string) {
       await Deno.mkdir(path);
     }
   }
+}
+
+async function getAllFilesInDir(path: string) {
+  const files = [];
+  await ensureDirExists(path);
   const walker = Deno.readDir(path);
   for await (const f of walker) {
     files.push(f);
   }
 
   return files;
+}
+
+async function ensureAssetsDirExists(adrdir: string) {
+  await ensureDirExists(path.join(adrdir, "assets"));
 }
 
 async function makeNewADR(
@@ -48,10 +56,7 @@ async function makeNewADR(
 
 async function rebuildReadme(adrDirPath: string, files: Array<Deno.DirEntry>) {
   files.sort((a, b) => {
-    if (a.name.startsWith("README")) {
-      return -9999999;
-    }
-    return parseInt(a.name.substring(0, 6)) - parseInt(b.name.substring(0, 6));
+    return parseInt(a.name.substring(0, 5)) - parseInt(b.name.substring(0, 5));
   });
   await Deno.writeTextFile(
     path.join(adrDirPath, "README.md"),
@@ -67,7 +72,7 @@ If you need to regenerate this readme without creating a new ADR, please use \`a
 ## Contents 
 
 ${
-      files.filter((f) => f.isFile).map((f) => {
+      files.filter((f) => f.isFile && !f.name.startsWith("README")).map((f) => {
         const noExt = f.name.substring(0, f.name.lastIndexOf("."));
         return `- [${noExt}](./${f.name})`;
       }).join("\n")
@@ -87,6 +92,7 @@ if (import.meta.main) {
   }
 
   const files = await getAllFilesInDir(adrdir);
+  await ensureAssetsDirExists(adrdir);
   const adrsOnly = files.filter((f) => /^\d{5}-.*$/.test(f.name));
   const action = Deno.args[0];
 
