@@ -21,6 +21,8 @@ fn rebuildReadme() !void {
     const numAsString = try std.fmt.bufPrint(&buf, "{}", .{std.time.timestamp()});
 
     var output = replace([]const u8, readmeContents, "{{timestamp}}", std.time.timestamp());
+
+    var output = replace([]const u8, output, "{{contents}}", "");
     
 
     try f.write(output);
