@@ -1,1 +1,4 @@
 adl
+
+.zig-cache/
+zig-out/
