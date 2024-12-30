@@ -125,3 +125,4 @@ pub fn main() !void {
         _ = bw.write(helpContents) catch @panic("Unable to write help contents");
     }
     try bw.flush();
+}
