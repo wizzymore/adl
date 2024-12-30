@@ -15,8 +15,14 @@ pub fn build(b: *std.Build) void {
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
+    const exe_name = b.option(
+        []const u8,
+        "exe_name",
+        "Name of the executable",
+    ) orelse "adl";
+
     const exe = b.addExecutable(.{
-        .name = "adl",
+        .name = exe_name,
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
