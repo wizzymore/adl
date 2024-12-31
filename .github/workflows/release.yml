@@ -28,13 +28,13 @@ jobs:
         run: "zig build -Dtarget=x86_64-macos -Doptimize=ReleaseSafe -Dexe_name=adl_mac_x86"
 
       - name: Build Mac_ARM 
-        run: "zig build -Dtarget=arm-macos -Doptimize=ReleaseSafe -Dexe_name=adl_mac_arm"
+        run: "zig build -Dtarget=aarch64-macos -Doptimize=ReleaseSafe -Dexe_name=adl_mac_arm"
 
       - name: Build Linux_x86 
         run: "zig build -Dtarget=x86_64-linux -Doptimize=ReleaseSafe -Dexe_name=adl_linux_x86"
 
       - name: Build Linux_ARM
-        run: "zig build -Dtarget=arm-linux -Doptimize=ReleaseSafe -Dexe_name=adl_linux_arm"
+        run: "zig build -Dtarget=aarch64-linux -Doptimize=ReleaseSafe -Dexe_name=adl_linux_arm"
 
       
       - name: Release
