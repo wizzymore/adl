@@ -43,7 +43,6 @@ fn rebuildReadme(allocator: std.mem.Allocator) !void {
 
 fn generateADR(allocator: std.mem.Allocator, n: u64, name: []u8) !void {
     const safeName = std.mem.replaceOwned(u8, allocator, name, " ", "-") catch @panic("out of memory");
-    std.debug.print("{s} {s}", .{ name, safeName });
     defer allocator.free(safeName);
     const paddedNums = try std.fmt.allocPrint(
         allocator,
