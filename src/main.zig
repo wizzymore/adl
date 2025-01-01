@@ -107,6 +107,7 @@ pub fn main() !void {
     defer std.process.argsFree(allocator, args);
 
     const stdout_file = std.io.getStdOut().writer();
+    const stderr_file = std.io.getStdErr().writer();
     var bw = std.io.bufferedWriter(stdout_file);
 
     const action = args[1];
@@ -115,7 +116,11 @@ pub fn main() !void {
         const fileList = try getAllFilesInADRDir(allocator);
         defer fileList.deinit();
         const name = std.mem.join(allocator, " ", args[2..]) catch unreachable;
-        try generateADR(allocator, fileList.items.len, name);
+        if (name.len == 0) {
+            _ = try stderr_file.write("No name supplied for the ADR. Command should be: adl create Name of ADR here\n");
+        } else {
+            try generateADR(allocator, fileList.items.len, name);
+        }
         allocator.free(name);
     } else if (std.mem.eql(u8, action, "regen")) {
         try ensureDirsExist();
