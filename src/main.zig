@@ -120,6 +120,7 @@ pub fn main() !void {
             _ = try stderr_file.write("No name supplied for the ADR. Command should be: adl create Name of ADR here\n");
         } else {
             try generateADR(allocator, fileList.items.len, name);
+            try rebuildReadme(allocator);
         }
         allocator.free(name);
     } else if (std.mem.eql(u8, action, "regen")) {

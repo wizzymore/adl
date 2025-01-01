@@ -11,5 +11,6 @@ If you need to regenerate this readme without creating a new ADR, please use \`a
 
  - [00000-Use-Deno.md](./00000-Use-Deno.md)
  - [00001-Support-an-assets-folder.md](./00001-Support-an-assets-folder.md)
+ - [00002-Migrate-to-Zig.md](./00002-Migrate-to-Zig.md)
 
-Last generated Wed, 1 Jan 2025 19:41:43 UTC
+Last generated Wed, 1 Jan 2025 21:48:03 UTC
