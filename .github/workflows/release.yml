@@ -16,25 +16,25 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v3
 
-      - name: Install Deno
-        uses: denoland/setup-deno@v2
+      - name: Install Zig
+        uses: mlugg/setup-zig@v1
         with:
-          deno-version: v2.x
+          version: 0.13.0
 
       - name: Build Windows 
-        run: "deno compile --target x86_64-pc-windows-msvc -o adl_windows_x86 main.ts"
+        run: "zig build -Dtarget=x86_64-windows -Doptimize=ReleaseSafe -Dexe_name=adl_windows_x86"
 
       - name: Build Mac_x86 
-        run: "deno compile --target x86_64-apple-darwin -o adl_mac_x86 main.ts"
+        run: "zig build -Dtarget=x86_64-macos -Doptimize=ReleaseSafe -Dexe_name=adl_mac_x86"
 
       - name: Build Mac_ARM 
-        run: "deno compile --target aarch64-apple-darwin -o adl_mac_arm main.ts"
+        run: "zig build -Dtarget=aarch64-macos -Doptimize=ReleaseSafe -Dexe_name=adl_mac_arm"
 
       - name: Build Linux_x86 
-        run: "deno compile --target x86_64-unknown-linux-gnu -o adl_linux_x86 main.ts"
+        run: "zig build -Dtarget=x86_64-linux -Doptimize=ReleaseSafe -Dexe_name=adl_linux_x86"
 
       - name: Build Linux_ARM
-        run: "deno compile --target aarch64-unknown-linux-gnu -o adl_linux_arm main.ts"
+        run: "zig build -Dtarget=aarch64-linux -Doptimize=ReleaseSafe -Dexe_name=adl_linux_arm"
 
       
       - name: Release
@@ -42,10 +42,10 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            adl_windows_x86
-            adl_mac_x86
-            adl_mac_arm
-            adl_linux_x86
-            adl_linux_arm
+            ./zig-out/bin/adl_windows_x86
+            ./zig-out/bin/adl_mac_x86
+            ./zig-out/bin/adl_mac_arm
+            ./zig-out/bin/adl_linux_x86
+            ./zig-out/bin/adl_linux_arm
             LICENSE
 
