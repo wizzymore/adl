@@ -78,7 +78,6 @@ fn ensureDirsExist() !void {
     try cwd.makePath("./adr/assets");
 }
 
-// TODO: This should take in an allocator
 fn getAllFilesInADRDir(allocator: std.mem.Allocator) !std.ArrayList([]const u8) {
     var dir = try std.fs.cwd().openDir("./adr", .{ .iterate = true });
     defer dir.close();
