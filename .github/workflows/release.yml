@@ -39,8 +39,7 @@ jobs:
       - name: Generate Checksums
         run: |
           cd ./zig-out/bin
-          sha256sum adl_windows_x86 > checksums.txt
-          sha256sum adl_mac_x86 >> checksums.txt
+          sha256sum adl_mac_x86 > checksums.txt
           sha256sum adl_mac_arm >> checksums.txt
           sha256sum adl_linux_x86 >> checksums.txt
           sha256sum adl_linux_arm >> checksums.txt
