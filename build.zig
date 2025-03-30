@@ -28,9 +28,12 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    const datetime = b.dependency("zig-datetime", .{});
+    const datetime = b.dependency("zig-datetime", .{
+        .target = target,
+        .optimize = optimize,
+    });
 
-    exe.root_module.addImport("zig-datetime", datetime.module("zig-datetime"));
+    exe.root_module.addImport("zig-datetime", datetime.module("datetime"));
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default

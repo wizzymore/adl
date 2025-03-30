@@ -19,7 +19,7 @@ jobs:
       - name: Install Zig
         uses: mlugg/setup-zig@v1
         with:
-          version: 0.13.0
+          version: 0.14.0
 
       - name: Build Windows 
         run: "zig build -Dtarget=x86_64-windows -Doptimize=ReleaseSafe -Dexe_name=adl_windows_x86"
@@ -36,6 +36,14 @@ jobs:
       - name: Build Linux_ARM
         run: "zig build -Dtarget=aarch64-linux -Doptimize=ReleaseSafe -Dexe_name=adl_linux_arm"
 
+      - name: Generate Checksums
+        run: |
+          cd ./zig-out/bin
+          sha256 adl_windows_x86 > checksums.txt
+          sha256 adl_mac_x86 >> checksums.txt
+          sha256 adl_mac_arm >> checksums.txt
+          sha256 adl_linux_x86 >> checksums.txt
+          sha256 adl_linux_arm >> checksums.txt
       
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -47,5 +55,6 @@ jobs:
             ./zig-out/bin/adl_mac_arm
             ./zig-out/bin/adl_linux_x86
             ./zig-out/bin/adl_linux_arm
+            ./zig-out/bin/checksums.txt
             LICENSE
 
