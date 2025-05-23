@@ -9,7 +9,6 @@ fn compareStrings(_: void, lhs: []const u8, rhs: []const u8) bool {
 }
 
 fn rebuildReadme(allocator: std.mem.Allocator) !void {
-    const f = try std.fs.cwd().createFile("./adr/README.md", .{});
 
     // TODO: Too many "Datetime"s
     const now = Datetime.datetime.Datetime.now();
@@ -38,6 +37,8 @@ fn rebuildReadme(allocator: std.mem.Allocator) !void {
     const withContents = std.mem.replaceOwned(u8, allocator, output, "{{contents}}", replacement) catch @panic("out of memory");
     defer allocator.free(withContents);
 
+    const f = try std.fs.cwd().createFile("./adr/README.md", .{});
+    defer f.close();
     _ = try f.write(withContents);
 }
 
@@ -64,12 +65,11 @@ fn generateADR(allocator: std.mem.Allocator, n: u64, name: []u8) !void {
     );
     defer allocator.free(heading);
 
-    const f = try std.fs.cwd().createFile(fileName, .{ .read = true });
-    defer f.close();
-
     const contents = std.mem.replaceOwned(u8, allocator, adrContents, "{{name}}", heading) catch @panic("Out of memory");
     defer allocator.free(contents);
 
+    const f = try std.fs.cwd().createFile(fileName, .{ .read = true });
+    defer f.close();
     try f.writeAll(contents);
 }
 
@@ -112,12 +112,12 @@ pub fn main() !void {
     const action = if (args.len > 1) args[1] else "";
     if (std.mem.eql(u8, action, "create")) {
         try ensureDirsExist();
-        const fileList = try getAllFilesInADRDir(allocator);
-        defer fileList.deinit();
         const name = std.mem.join(allocator, " ", args[2..]) catch unreachable;
         if (name.len == 0) {
             _ = try stderr_file.write("No name supplied for the ADR. Command should be: adl create Name of ADR here\n");
         } else {
+            const fileList = try getAllFilesInADRDir(allocator);
+            defer fileList.deinit();
             try generateADR(allocator, fileList.items.len, name);
             try rebuildReadme(allocator);
         }
