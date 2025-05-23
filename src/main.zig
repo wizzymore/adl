@@ -3,19 +3,28 @@ const Datetime = @import("zig-datetime");
 const readmeContents = @embedFile("./templates/readme_template.md");
 const adrContents = @embedFile("./templates/adr_template.md");
 const helpContents = @embedFile("./templates/help.txt");
+const templateReadmeContents = @embedFile("./templates/readme_templates_folder.md");
 
 fn compareStrings(_: void, lhs: []const u8, rhs: []const u8) bool {
     return std.mem.order(u8, lhs, rhs).compare(std.math.CompareOperator.lt);
 }
 
-fn rebuildReadme(allocator: std.mem.Allocator) !void {
+fn readFileIfExists(allocator: std.mem.Allocator, filepath: []const u8) ![]u8 {
+    const templateFile = try std.fs.cwd().openFile(filepath, .{});
+    defer templateFile.close();
 
+    const fileContents = try templateFile.readToEndAlloc(allocator, std.math.maxInt(usize));
+    return fileContents;
+}
+
+fn rebuildReadme(allocator: std.mem.Allocator) !void {
+    const templateContents = readFileIfExists(allocator, "./adr/templates/template_readme.md") catch readmeContents;
     // TODO: Too many "Datetime"s
     const now = Datetime.datetime.Datetime.now();
     const date = try now.formatHttp(allocator);
     defer allocator.free(date);
 
-    const output = std.mem.replaceOwned(u8, allocator, readmeContents, "{{timestamp}}", date) catch @panic("out of memory");
+    const output = std.mem.replaceOwned(u8, allocator, templateContents, "{{timestamp}}", date) catch @panic("out of memory");
     defer allocator.free(output);
 
     const files = try getAllFilesInADRDir(allocator);
@@ -65,7 +74,8 @@ fn generateADR(allocator: std.mem.Allocator, n: u64, name: []u8) !void {
     );
     defer allocator.free(heading);
 
-    const contents = std.mem.replaceOwned(u8, allocator, adrContents, "{{name}}", heading) catch @panic("Out of memory");
+    const templateContents = readFileIfExists(allocator, "./adr/templates/template_adr.md") catch adrContents;
+    const contents = std.mem.replaceOwned(u8, allocator, templateContents, "{{name}}", heading) catch @panic("Out of memory");
     defer allocator.free(contents);
 
     const f = try std.fs.cwd().createFile(fileName, .{ .read = true });
@@ -73,9 +83,13 @@ fn generateADR(allocator: std.mem.Allocator, n: u64, name: []u8) !void {
     try f.writeAll(contents);
 }
 
-fn ensureDirsExist() !void {
+fn establishCoreFiles() !void {
     const cwd = std.fs.cwd();
     try cwd.makePath("./adr/assets");
+    try cwd.makePath("./adr/templates");
+
+    const f = try std.fs.cwd().createFile("./adr/templates/README.md", .{});
+    try f.writeAll(templateReadmeContents);
 }
 
 fn getAllFilesInADRDir(allocator: std.mem.Allocator) !std.ArrayList([]const u8) {
@@ -89,7 +103,7 @@ fn getAllFilesInADRDir(allocator: std.mem.Allocator) !std.ArrayList([]const u8) 
     var dirIterator = dir.iterate();
     while (try dirIterator.next()) |dirContent| {
         // Append the file name to the ArrayList
-        if (!std.mem.eql(u8, dirContent.name, "README.md") and !std.mem.eql(u8, dirContent.name, "assets")) {
+        if (!std.mem.eql(u8, dirContent.name, "README.md") and !std.mem.eql(u8, dirContent.name, "assets") and !std.mem.eql(u8, dirContent.name, "templates")) {
             const fileName = try allocator.dupe(u8, dirContent.name);
             try file_list.append(fileName);
         }
@@ -111,7 +125,7 @@ pub fn main() !void {
 
     const action = if (args.len > 1) args[1] else "";
     if (std.mem.eql(u8, action, "create")) {
-        try ensureDirsExist();
+        try establishCoreFiles();
         const name = std.mem.join(allocator, " ", args[2..]) catch unreachable;
         if (name.len == 0) {
             _ = try stderr_file.write("No name supplied for the ADR. Command should be: adl create Name of ADR here\n");
@@ -123,7 +137,7 @@ pub fn main() !void {
         }
         allocator.free(name);
     } else if (std.mem.eql(u8, action, "regen")) {
-        try ensureDirsExist();
+        try establishCoreFiles();
         try rebuildReadme(allocator);
     } else {
         _ = bw.write(helpContents) catch @panic("Unable to write help contents");
