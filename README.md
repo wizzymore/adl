@@ -4,6 +4,26 @@ adl (pronounce "Addle") is a tool for managing ADRs (architecture decision recor
 
 adl helps generate markdown files for capturing information in an ADR and generates a README in your `adr` directory to help catalogue everything. The README also provides information on how to use `adl` to manage your `adr`s.
 
+## Odin version
+
+To run the application:
+
+```bash
+odin run src -- <command>
+```
+
+Create:
+
+```bash
+odin run src -- create <name>
+```
+
+Regen:
+
+```bash
+odin run src -- regen
+```
+
 ## How to use
 
 Install adl and add it to your path. **Do not run copy/paste this script. Read it, and run only the parts that you need.**
@@ -12,7 +32,7 @@ Install adl and add it to your path. **Do not run copy/paste this script. Read i
 # Use the appropriate binary for your OS and Arch
 binary="adl_linux_arm"    # linux arm
 binary="adl_linux_x86"    # linux x86
-binary="adl_mac_arm"      # mac arm 
+binary="adl_mac_arm"      # mac arm
 binary="adl_mac_x86"      # mac x86
 binary="adl_windows_x86"  # windows
 
